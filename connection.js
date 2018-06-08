@@ -9,7 +9,7 @@ module.exports = class Connection {
         this.io.on(ioEventType.CONNECTION, (socket) => {
 
             var connectedUser = {
-                soketId: socket.id,
+                socketId: socket.id,
                 userName: socket.handshake.query.id
             };
 
