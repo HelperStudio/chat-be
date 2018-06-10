@@ -7,6 +7,8 @@ module.exports = {
     },
 
     removeUser: function(socketId) {
-        this.users = this.users.filter(x => x.socketId == socketId)
+        var filtered = this.users.filter(x => x.socketId != socketId);
+        console.log("filtered", filtered);
+        this.users = filtered;
     }
 }

@@ -8,6 +8,7 @@ module.exports = class UserController {
 
     initialize() {
         this._app.get(this.prefix, function(req, res) {
+            console.log("API users", storage.users)
             res.send(storage.users);
         });
     }
