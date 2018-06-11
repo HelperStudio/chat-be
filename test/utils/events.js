@@ -27,4 +27,24 @@ module.exports = class Events {
             });
         });
     }
+
+    static onOnline(client, userName) {
+        console.log("wait online for ", userName)
+        return new Promise((resolve, reject) => {
+            client.on('online', x => {
+                console.log("EVENTS client online username", x.userName);
+                if (x.userName == userName)
+                    resolve(x);
+            });
+        });
+    }
+
+    static onMessage(client, userName) {
+        return new Promise((resolve, reject) => {
+            client.on('message', x => {
+                if (x.from == userName)
+                    resolve(x);
+            });
+        });
+    }
 }

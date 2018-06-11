@@ -42,6 +42,13 @@ function closeClient(client) {
     })
 }
 
+function emit(client, msg) {
+    return new Promise((res, rej) => {
+        client.emit("message", msg);
+        res();
+    })
+}
+
 beforeEach(async function() {
     this.timeout(7000);
     await Promise.all([closeClient(client1), closeClient(client2), closeClient(client3)]);
@@ -81,3 +88,29 @@ it('should disconnect successfull', async() => {
     expect(res.body.length).to.equal(1);
     expect(res.body).to.deep.include({ socketId: client2.id, userName: chatUser2.name });
 }).timeout(7000);
+
+it('should receive event about new user connect', async() => {
+    client1 = io.connect(socketUrl + "?id=" + chatUser1.name, options);
+    await Events.onconnect(client1);
+
+    client2 = io.connect(socketUrl + "?id=" + chatUser2.name, options);
+
+    var res = await Promise.all([Events.onconnect(client2), Events.onOnline(client1, chatUser2.name)])
+
+    expect(res[1]).to.deep.equal({ socketId: client2.id, userName: chatUser2.name });
+});
+
+it('should receive message', async() => {
+    client1 = io.connect(socketUrl + "?id=" + chatUser1.name, options);
+    await Events.onconnect(client1);
+
+    client2 = io.connect(socketUrl + "?id=" + chatUser2.name, options);
+    await Events.onconnect(client2);
+
+    var msg = { from: chatUser1.name, text: "test text" }
+
+
+    var res = await Promise.all([Events.onMessage(client2, chatUser1.name), emit(client1, msg)])
+
+    expect(res[0]).to.deep.equal(msg);
+});

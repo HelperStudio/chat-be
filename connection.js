@@ -2,6 +2,7 @@ var ioEventType = require("./enums/ioEventTypes");
 var Common = require("./socketEvents/definition/commonDefinition");
 var Message = require("./socketEvents/definition/messageDefinition");
 var storage = require('./storage/connectedUsers');
+var broadcastEventType = require("./enums/broadcastEventType");
 
 module.exports = class Connection {
     constructor(http) {
@@ -21,6 +22,8 @@ module.exports = class Connection {
 
             commonModule.initialize();
             messageModule.initialize();
+
+            socket.broadcast.emit(broadcastEventType.CONNECT, connectedUser);
         });
     }
 }
