@@ -1,15 +1,21 @@
 {
-  "name": "demo_chat",
-  "version": "1.0.0",
-  "description": "chat app for demo",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "helper-studio.com",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.16.3",
-    "socket.io": "^2.1.0"
-  }
+    "name": "demo_chat",
+    "version": "1.0.0",
+    "description": "chat app for demo",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "test": "npm start & mocha test"
+    },
+    "author": "helper-studio.com",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.16.3",
+        "socket.io": "^2.1.0"
+    },
+    "devDependencies": {
+        "chai": "^4.1.2",
+        "mocha": "^5.2.0",
+        "supertest": "^3.1.0"
+    }
 }

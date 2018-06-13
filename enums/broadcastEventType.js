@@ -1,4 +1,5 @@
 module.exports = {
     DISCONNECT: "offline",
-    MESSAGE: "message"
+    MESSAGE: "message",
+    CONNECT: "online"
 };
