@@ -11,7 +11,8 @@ module.exports = class Connection {
 
             var connectedUser = {
                 socketId: socket.id,
-                userName: socket.handshake.query.id
+                name: socket.handshake.query.name,
+                id: socket.handshake.query.id
             };
 
             storage.addUser(connectedUser)
