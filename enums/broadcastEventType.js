@@ -1,5 +1,6 @@
 module.exports = {
     DISCONNECT: "offline",
     MESSAGE: "message",
-    CONNECT: "online"
+    CONNECT: "online",
+    USER_INFO: "userInfo"
 };

@@ -1,4 +1,5 @@
 module.exports = {
     DISCONNECT: "disconnect",
-    MESSAGE: "message"
+    MESSAGE: "message",
+    USER_INFO: "userInfo"
 };

@@ -1,5 +1,6 @@
 module.exports = class UserModel {
-    constructor(name, picture, gender) {
+    constructor(id, name, picture, gender) {
+        this.id = id;
         this.name = name;
         this.picture = picture;
         this.gender = gender;

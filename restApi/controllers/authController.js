@@ -49,7 +49,7 @@ module.exports = class AuthController {
         } else {
             var tokenResponseModel = new TokenResponseModel(authResponse);
             var userInfo = await httpClient.get('/oauth2/v1/userinfo?alt=json&access_token=' + tokenResponseModel.accessToken);
-            var userModel = new UserModel(userInfo.name, userInfo.picture, userInfo.gender);
+            var userModel = new UserModel(userInfo.id, userInfo.name, userInfo.picture, userInfo.gender);
             var authModel = new AuthModel(tokenResponseModel, userModel);
             return new SuccessModel(authModel);
         }
