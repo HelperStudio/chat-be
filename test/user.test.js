@@ -13,18 +13,18 @@ var options = {
     'force new connection': true
 };
 
-var chatUser1 = { name: 'Tom' };
-var chatUser2 = { name: 'Sally' };
-var chatUser3 = { name: 'Dana' };
+var chatUser1 = { name: 'Tom', id: '1' };
+var chatUser2 = { name: 'Sally', id: '2' };
+var chatUser3 = { name: 'Dana', id: '3' };
 
 var client1, client2, client3;
 
 async function waitEmptyUserList(ms) {
     return new Promise(async(resolve, reject) => {
         var timerId = setInterval(async x => {
-            var userList = await UserRequest.list();
-            console.log("length", userList.body.length)
-            if (userList.body.length == 0) {
+            let userListResponse = await UserRequest.list();
+            let userList = userListResponse.body.data;
+            if (userList.length == 0) {
 
                 clearTimeout(timerId);
                 resolve();
@@ -56,25 +56,25 @@ beforeEach(async function() {
 });
 
 it('should connect successfull', async() => {
-    client1 = io.connect(socketUrl + "?id=" + chatUser1.name, options);
-    client2 = io.connect(socketUrl + "?id=" + chatUser2.name, options);
+    client1 = io.connect(socketUrl + "?id=" + chatUser1.id + "&name=" + chatUser1.name, options);
+    client2 = io.connect(socketUrl + "?id=" + chatUser2.id + "&name=" + chatUser2.name, options);
 
     await Events.onconnect(client1);
     await Events.onconnect(client2);
 
-    var res = await UserRequest.list();
-
+    let res = await UserRequest.list();
+    let data = res.body.data;
     expect(res.statusCode).to.equal(200);
-    expect(res.body).to.be.an('array');
-    expect(res.body.length).to.equal(2);
-    expect(res.body).to.deep.include({ socketId: client1.id, userName: chatUser1.name });
-    expect(res.body).to.deep.include({ socketId: client2.id, userName: chatUser2.name });
+    expect(data).to.be.an('array');
+    expect(data.length).to.equal(2);
+    expect(data).to.deep.include({ socketId: client1.id, name: chatUser1.name, id: chatUser1.id });
+    expect(data).to.deep.include({ socketId: client2.id, name: chatUser2.name, id: chatUser2.id });
 });
 
 
 it('should disconnect successfull', async() => {
-    client1 = io.connect(socketUrl + "?id=" + chatUser1.name, options);
-    client2 = io.connect(socketUrl + "?id=" + chatUser2.name, options);
+    client1 = io.connect(socketUrl + "?id=" + chatUser1.id + "&name=" + chatUser1.name, options);
+    client2 = io.connect(socketUrl + "?id=" + chatUser2.id + "&name=" + chatUser2.name, options);
 
     await Events.onconnect(client1);
     await Events.onconnect(client2);
@@ -82,29 +82,30 @@ it('should disconnect successfull', async() => {
     var socketId = client1.id;
 
     await Promise.all([Events.onOffline(client2, socketId), closeClient(client1)]);
-    var res = await UserRequest.list();
+    let res = await UserRequest.list();
+    let data = res.body.data;
     expect(res.statusCode).to.equal(200);
-    expect(res.body).to.be.an('array');
-    expect(res.body.length).to.equal(1);
-    expect(res.body).to.deep.include({ socketId: client2.id, userName: chatUser2.name });
+    expect(data).to.be.an('array');
+    expect(data.length).to.equal(1);
+    expect(data).to.deep.include({ socketId: client2.id, name: chatUser2.name, id: chatUser2.id });
 }).timeout(7000);
 
 it('should receive event about new user connect', async() => {
-    client1 = io.connect(socketUrl + "?id=" + chatUser1.name, options);
+    client1 = io.connect(socketUrl + "?id=" + chatUser1.id + "&name=" + chatUser1.name, options);
     await Events.onconnect(client1);
 
-    client2 = io.connect(socketUrl + "?id=" + chatUser2.name, options);
+    client2 = io.connect(socketUrl + "?id=" + chatUser2.id + "&name=" + chatUser2.name, options);
 
-    var res = await Promise.all([Events.onconnect(client2), Events.onOnline(client1, chatUser2.name)])
+    let res = await Promise.all([Events.onconnect(client2), Events.onOnline(client1, chatUser2.name)])
 
-    expect(res[1]).to.deep.equal({ socketId: client2.id, userName: chatUser2.name });
+    expect(res[1]).to.deep.equal({ socketId: client2.id, name: chatUser2.name, id: chatUser2.id });
 });
 
 it('should receive message', async() => {
-    client1 = io.connect(socketUrl + "?id=" + chatUser1.name, options);
+    client1 = io.connect(socketUrl + "?id=" + chatUser1.id + "&name=" + chatUser1.name, options);
     await Events.onconnect(client1);
 
-    client2 = io.connect(socketUrl + "?id=" + chatUser2.name, options);
+    client2 = io.connect(socketUrl + "?id=" + chatUser2.id + "&name=" + chatUser2.name, options);
     await Events.onconnect(client2);
 
     var msg = { from: chatUser1.name, text: "test text" }
