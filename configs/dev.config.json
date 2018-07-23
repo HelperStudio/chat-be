@@ -1,5 +1,11 @@
 {
-    "db": "",
+    "db": {
+        "user": "dbuser",
+        "host": "localhost",
+        "database": "demochat",
+        "password": "!1q2w3e4r",
+        "port": 5432
+    },
     "port": 3000,
     "google": {
         "clientId": "601317135063-mtft6j3ge7o541q2beou5t4n5tec5eef.apps.googleusercontent.com",

@@ -44,7 +44,7 @@ module.exports = class AuthController {
 
         var authResponse = await httpClient.post("/oauth2/v4/token", tokenRequestModel, 'application/x-www-form-urlencoded');
         if (authResponse.error) {
-            var errorItem = new ErrorItem("service.google", authResponse.error + authResponse.error_description);
+            var errorItem = new ErrorItem("service.google", authResponse.error + ': ' + authResponse.error_description);
             return new ErrorModel(503, errorItem);
         } else {
             var tokenResponseModel = new TokenResponseModel(authResponse);
@@ -53,6 +53,5 @@ module.exports = class AuthController {
             var authModel = new AuthModel(tokenResponseModel, userModel);
             return new SuccessModel(authModel);
         }
-
     }
 }
