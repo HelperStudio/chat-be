@@ -1,7 +1,10 @@
 var app = require('express')();
+var path = require('path');
+var express = require('express');
 var http = require('http').Server(app);
 var Connection = require("./connection");
 var ControllerInitializer = require('./restApi/controllerInitializer');
+var config = require('./configs/config');
 
 var connection = new Connection(http);
 
@@ -11,11 +14,25 @@ app.use(function(req, res, next) {
     next();
 });
 
-http.listen(3000, function() {
+app.use(express.json());
+app.use(express.urlencoded())
+
+var migrationConfiguration = {
+    migrationsDir: path.resolve(__dirname, 'migrations'),
+    host: config.db.host,
+    port: config.db.port,
+    db: config.db.database,
+    user: config.db.user,
+    password: config.db.password
+};
+
+require('sql-migrations').migrate(migrationConfiguration);
+
+http.listen(config.port, function() {
     var controllerInitializer = new ControllerInitializer(app);
     controllerInitializer.initialize();
 
-    console.log('listening on *:3000');
+    console.log('listening on *:' + config.port);
 });
 
 module.exports = app;

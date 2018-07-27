@@ -32,8 +32,8 @@ module.exports = class Events {
         console.log("wait online for ", userName)
         return new Promise((resolve, reject) => {
             client.on('online', x => {
-                console.log("EVENTS client online username", x.userName);
-                if (x.userName == userName)
+                console.log("EVENTS client online", x);
+                if (x.name == userName)
                     resolve(x);
             });
         });
