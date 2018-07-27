@@ -3,12 +3,12 @@ module.exports = class UserRepository {
         this.client = client;
     }
 
-    getById(id) {
-        const res = await client.query('SELECT * from users where id = $1', id);
-        return res.rows;
+    async getById(id) {
+        const res = await this.client.query('SELECT * from users where id = $1;', [id]);
+        return res.rows[0];
     }
 
-    add(id, name, picture, gender) {
+    async add(id, name, picture, gender) {
         let params = [
             id,
             name,
@@ -16,16 +16,16 @@ module.exports = class UserRepository {
             gender
         ];
 
-        await this.client.query('INSERT INTO users (id, name, picture, gender) VALUES ($1, $2, $3, $4)', params);
+        await this.client.query('INSERT INTO users (id, name, picture, gender) VALUES ($1, $2, $3, $4);', params);
     }
 
-    update(id, name, picture, gender) {
+    async update(id, name, picture, gender) {
         let params = [
             name,
             picture,
             gender,
             id
         ];
-        await this.client.query('UPDATE users SET name = $1, picture = $2, gender = $3 where id = $4', params);
+        await this.client.query('UPDATE users SET name = $1, picture = $2, gender = $3 where id = $4;', params);
     }
 }

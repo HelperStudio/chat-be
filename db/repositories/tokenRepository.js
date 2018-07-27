@@ -3,23 +3,23 @@ module.exports = class TokenRepository {
         this.client = client;
     }
 
-    getByAccessToken(accessToken) {
+    async getByAccessToken(accessToken) {
         let params = [
             accessToken
         ];
-        const res = await client.query('SELECT * from user2tokens where access_token = $1', params);
+        const res = await client.query('SELECT * from user2tokens where access_token = $1;', params);
         return res.rows[0];
     }
 
-    getByRefreshToken(refreshToken) {
+    async getByRefreshToken(refreshToken) {
         let params = [
             refreshToken
         ];
-        const res = await client.query('SELECT * from user2tokens where refresh_token = $1', params);
+        const res = await client.query('SELECT * from user2tokens where refresh_token = $1;', params);
         return res.rows[0];
     }
 
-    add(userId, accessToken, refreshToken, expire) {
+    async add(userId, accessToken, refreshToken, expire) {
         let params = [
             userId,
             accessToken,
@@ -27,20 +27,20 @@ module.exports = class TokenRepository {
             expire
         ];
 
-        await this.client.query('INSERT INTO user2tokens (user_id, access_token, refresh_token, expire) VALUES ($1, $2, $3, $4)', params);
+        await this.client.query('INSERT INTO user2tokens (user_id, access_token, refresh_token, expire) VALUES ($1, $2, $3, $4);', params);
     }
 
-    remove(accessToken) {
+    async remove(accessToken) {
         let params = [
             accessToken
         ];
-        await this.client.query('DELETE from user2sockets where access_token = $1', params);
+        await this.client.query('DELETE from user2sockets where access_token = $1;', params);
     }
 
-    removeAllByUserId(userId) {
+    async removeAllByUserId(userId) {
         let params = [
             userId
         ];
-        await this.client.query('DELETE from user2sockets where user_id = $1', params);
+        await this.client.query('DELETE from user2sockets where user_id = $1;', params);
     }
 }

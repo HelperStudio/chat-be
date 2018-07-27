@@ -1,7 +1,7 @@
 const { Pool } = require('pg')
 const config = require('../../../configs/config').db;
 
-module.exports = class GetConnectedUsers {
+module.exports = class GetConnectedUsersQuerier {
     constructor() {}
 
     async execute() {
@@ -9,10 +9,10 @@ module.exports = class GetConnectedUsers {
         const client = await pool.connect();
         try {
             const query =
-                `SELECT DISTINCT * FROM users as u
+                `SELECT DISTINCT u.* FROM users as u
                 JOIN user2sockets as u2s on u.id = u2s.user_id`;
             const res = await client.query(query);
-            return res;
+            return res.rows;
         } finally {
             client.release()
         }

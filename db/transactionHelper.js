@@ -3,16 +3,18 @@ module.exports = class TransactionHelper {
         this.client = client;
     }
 
-    execute(fn) {
+    async execute(fn) {
         try {
-            await client.query('BEGIN')
-            fn();
-            await client.query('COMMIT')
+            let result = null;
+            await this.client.query('BEGIN')
+            result = await fn();
+            await this.client.query('COMMIT')
+            return result;
         } catch (e) {
-            await client.query('ROLLBACK')
+            await this.client.query('ROLLBACK')
             throw e;
         } finally {
-            client.release();
+            this.client.release();
         }
     }
 }

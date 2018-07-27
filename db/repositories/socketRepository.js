@@ -3,23 +3,36 @@ module.exports = class SocketRepository {
         this.client = client;
     }
 
-    getBySocketId(id) {
+    async getBySocketId(id) {
         let params = [
             id
         ];
-        const res = await client.query('SELECT * from user2sockets where socket_id = $1', params);
-        return res.rows[0];
+        const res = await this.client.query('SELECT * from user2sockets where socket_id = $1', params);
+        if (res.rows.length == 0) {
+            return null;
+        } else {
+            let data = res.rows[0];
+            return {
+                userId: data.user_id,
+                socketId: data.socket_id
+            }
+        }
     }
 
-    getByUserId(userId) {
+    async getByUserId(userId) {
         let params = [
-            id
+            userId
         ];
-        const res = await client.query('SELECT * from user2sockets where user_id = $1', params);
-        return res.rows;
+        const res = await this.client.query('SELECT * from user2sockets where user_id = $1', params);
+        return res.rows.map(x => {
+            return {
+                userId: x.user_id,
+                socketId: x.socket_id
+            }
+        });
     }
 
-    add(socketId, userId) {
+    async add(socketId, userId) {
         let params = [
             socketId,
             userId
@@ -28,7 +41,7 @@ module.exports = class SocketRepository {
         await this.client.query('INSERT INTO user2sockets (socket_id, user_id) VALUES ($1, $2)', params);
     }
 
-    remove(socketId) {
+    async remove(socketId) {
         let params = [
             socketId
         ];

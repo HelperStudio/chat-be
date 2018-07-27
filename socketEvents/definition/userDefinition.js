@@ -11,7 +11,5 @@ module.exports = class UserDefinition {
         if (this.socket == null) {
             throw "socket is null";
         }
-
-        this.socket.on(socketEventType.USER_INFO, this.impl.userInfo)
     }
 }
