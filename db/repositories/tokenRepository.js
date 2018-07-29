@@ -7,16 +7,36 @@ module.exports = class TokenRepository {
         let params = [
             accessToken
         ];
-        const res = await client.query('SELECT * from user2tokens where access_token = $1;', params);
-        return res.rows[0];
+        const res = await this.client.query('SELECT * from user2tokens where access_token = $1;', params);
+        if (res.rows.length == 0) {
+            return null;
+        } else {
+            let data = res.rows[0];
+            return {
+                userId: data.user_id,
+                accessToken: data.access_token,
+                refreshToken: data.refresh_token,
+                expire: data.expire
+            }
+        }
     }
 
     async getByRefreshToken(refreshToken) {
         let params = [
             refreshToken
         ];
-        const res = await client.query('SELECT * from user2tokens where refresh_token = $1;', params);
-        return res.rows[0];
+        const res = await this.client.query('SELECT * from user2tokens where refresh_token = $1;', params);
+        if (res.rows.length == 0) {
+            return null;
+        } else {
+            let data = res.rows[0];
+            return {
+                userId: data.user_id,
+                accessToken: data.access_token,
+                refreshToken: data.refresh_token,
+                expire: data.expire
+            }
+        }
     }
 
     async add(userId, accessToken, refreshToken, expire) {

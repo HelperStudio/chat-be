@@ -48,4 +48,11 @@ module.exports = class RoomRepository {
         ];
         await this.client.query('UPDATE rooms SET name = $1 where id = $2;', params);
     }
+
+    async delete(id) {
+        let params = [
+            id
+        ];
+        await this.client.query('DELETE from rooms where id = $1;', params);
+    }
 }

@@ -88,9 +88,8 @@ module.exports = class LoginCommand {
 
     async storeTokenInDb(dbClient, userId, accessToken, refreshToken, expireIn) {
         const tokenRepository = new TokenRepository(dbClient);
-        let now = moment.utc();
-        let expire = now.add(expireIn, 'milliseconds');
+        let now = moment();
+        let expire = now.add(expireIn, 'seconds');
         tokenRepository.add(userId, accessToken, refreshToken, expire.format())
     }
-
 }
